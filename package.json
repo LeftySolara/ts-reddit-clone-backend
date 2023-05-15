@@ -2,6 +2,11 @@
   "name": "reddit-clone",
   "version": "0.0.1",
   "description": "A Reddit clone written in Typescript",
+  "author": "Julianne Adams <julianne@julianneadams.info>",
+  "private": true,
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "main": "src/server.ts",
   "scripts": {
     "build": "tsc && tsc-alias",
@@ -9,7 +14,6 @@
     "prod": "NODE_ENV=production ts-node -r tsconfig-paths/register ./src/server.ts",
     "start": "NODE_ENV=production node dist/server.js"
   },
-  "author": "Julianne Adams <julianne@julianneadams.info>",
   "devDependencies": {
     "@types/node": "^20.1.4",
     "ts-node": "^10.9.1",

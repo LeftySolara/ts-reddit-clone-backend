@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
-import { appConfig } from "./appConfig";
-import logger from "./logger";
+import { appConfig } from "@utils/appConfig";
+import logger from "@utils/logger";
 
 const app = express();
 

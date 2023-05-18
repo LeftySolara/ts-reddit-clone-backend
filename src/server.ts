@@ -31,6 +31,17 @@ app.use("/", (req: Request, res: Response) => {
   return res.json({ message: "Hello World!" });
 });
 
+app.use("/users", (req: Request, res: Response) => {
+  const { emailAddress, username } = req.body;
+
+  return res.json({
+    user: {
+      emailAddress,
+      username,
+    },
+  });
+});
+
 app.listen(appConfig.express.serverPort, () => {
   logger.info(
     { port: appConfig.express.serverPort },

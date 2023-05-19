@@ -4,7 +4,7 @@ import { pinoHttp } from "pino-http";
 import { appConfig } from "@utils/appConfig";
 import logger from "@utils/logger";
 import userRoutes from "@components/users/users.routes";
-import { AppError, ErrorHandler } from "@utils/errors";
+import { ErrorHandler } from "@utils/errors";
 
 const loadExpress = async ({ app }: { app: Application }) => {
   app.use(bodyParser.json());
@@ -27,19 +27,14 @@ const loadExpress = async ({ app }: { app: Application }) => {
     next();
   });
 
+  app.use("/users", userRoutes);
+
   /* eslint-disable no-unused-vars,@typescript-eslint/no-unused-vars */
   app.use(
-    async (
-      error: AppError,
-      req: Request,
-      res: Response,
-      next: NextFunction,
-    ) => {
+    async (error: Error, req: Request, res: Response, next: NextFunction) => {
       await ErrorHandler.handleError(error, res);
     },
   );
-
-  app.use("/users", userRoutes);
 };
 
 export default loadExpress;

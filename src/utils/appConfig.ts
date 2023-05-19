@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 interface IAppConfig {
   express: {
     serverPort: string | undefined;
+    corsOrigin: string | undefined;
   };
   logger: {
     logLevel: string | undefined;
@@ -25,6 +26,7 @@ if (
 const appConfig: IAppConfig = {
   express: {
     serverPort: process.env.SERVER_PORT,
+    corsOrigin: process.env.CORS_ORIGIN,
   },
   logger: {
     logLevel: process.env.LOG_LEVEL,

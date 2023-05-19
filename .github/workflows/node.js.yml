@@ -18,6 +18,7 @@ jobs:
       SERVER_PORT: 5000
       LOG_LEVEL: "debug"
       LOG_LOCATION: "./test.log"
+      CORS_ORIGIN: 127.0.0.1
 
     strategy:
       matrix:

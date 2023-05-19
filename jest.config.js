@@ -13,6 +13,8 @@ module.exports = {
   testMatch: ["**/*.test.ts"],
   moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
+    "@components(.*)$": "<rootDir>/src/components$1",
+    "@infra(.*)$": "<rootdir>/src/components$1",
     "@utils(.*)$": "<rootDir>/src/utils$1",
   },
 };

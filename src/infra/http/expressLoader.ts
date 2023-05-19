@@ -1,8 +1,9 @@
-import { Application, Request, Response } from "express";
+import { Application } from "express";
 import bodyParser, { urlencoded } from "body-parser";
 import { pinoHttp } from "pino-http";
 import { appConfig } from "@utils/appConfig";
 import logger from "@utils/logger";
+import userRoutes from "@components/users/users.routes";
 
 const loadExpress = async ({ app }: { app: Application }) => {
   app.use(bodyParser.json());
@@ -25,21 +26,7 @@ const loadExpress = async ({ app }: { app: Application }) => {
     next();
   });
 
-  app.use("/", (req: Request, res: Response) => {
-    logger.info("Received request...");
-    return res.json({ message: "Hello World!" });
-  });
-
-  app.use("/users", (req: Request, res: Response) => {
-    const { emailAddress, username } = req.body;
-
-    return res.json({
-      user: {
-        emailAddress,
-        username,
-      },
-    });
-  });
+  app.use("/users", userRoutes);
 };
 
 export default loadExpress;

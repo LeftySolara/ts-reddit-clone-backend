@@ -23,6 +23,15 @@ describe("Test the routes at /users", () => {
           },
         });
       });
+
+      it("should respond with status code 400 and an error message if request body is empty", async () => {
+        const response: request.Response = await request(app).get("/users");
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toMatchObject({
+          message: expect.any(String),
+        });
+      });
     });
   });
 });

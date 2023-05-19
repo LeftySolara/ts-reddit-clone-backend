@@ -1,9 +1,10 @@
-import { Application } from "express";
+import { Application, NextFunction, Request, Response } from "express";
 import bodyParser, { urlencoded } from "body-parser";
 import { pinoHttp } from "pino-http";
 import { appConfig } from "@utils/appConfig";
 import logger from "@utils/logger";
 import userRoutes from "@components/users/users.routes";
+import { AppError, ErrorHandler } from "@utils/errors";
 
 const loadExpress = async ({ app }: { app: Application }) => {
   app.use(bodyParser.json());
@@ -25,6 +26,18 @@ const loadExpress = async ({ app }: { app: Application }) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
     next();
   });
+
+  /* eslint-disable no-unused-vars,@typescript-eslint/no-unused-vars */
+  app.use(
+    async (
+      error: AppError,
+      req: Request,
+      res: Response,
+      next: NextFunction,
+    ) => {
+      await ErrorHandler.handleError(error, res);
+    },
+  );
 
   app.use("/users", userRoutes);
 };

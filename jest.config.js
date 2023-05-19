@@ -14,7 +14,7 @@ module.exports = {
   moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
     "@components(.*)$": "<rootDir>/src/components$1",
-    "@infra(.*)$": "<rootdir>/src/components$1",
+    "@infra(.*)$": "<rootDir>/src/infra$1",
     "@utils(.*)$": "<rootDir>/src/utils$1",
   },
 };

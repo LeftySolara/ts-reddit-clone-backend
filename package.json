@@ -7,6 +7,9 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "prisma": {
+    "schema": "src/infra/database/schema.prisma"
+  },
   "main": "src/infra/http/server.ts",
   "scripts": {
     "build": "tsc && tsc-alias",

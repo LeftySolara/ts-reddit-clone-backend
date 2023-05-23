@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
 import { AppError, commonErrorNames, commonHttpErrors } from "@utils/errors";
+import { database } from "@infra/database/database";
 
 const router: express.Router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   const { emailAddress, username } = req.body;
 
   if (!emailAddress || !username) {
@@ -15,7 +16,21 @@ router.get("/", (req: Request, res: Response) => {
     );
   }
 
-  return res.status(200).json({ user: { emailAddress, username } });
+  await database.user.create({
+    data: {
+      username,
+      emailAddress,
+      hashedPassword: "example",
+      avatar: "http://127.0.0.1/#",
+      uuid: "example",
+      displayName: "example",
+      karma: 0,
+    },
+  });
+
+  const user = await database.user.findFirst();
+
+  return res.status(200).json({ user });
 });
 
 export default router;

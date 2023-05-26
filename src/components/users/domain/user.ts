@@ -3,10 +3,11 @@ import { UniqueEntityId } from "@domain/uniqueEntityId";
 import { Guard, IGuardResult } from "@utils/guard";
 import { Result } from "@utils/result";
 import { Username } from "@components/users/domain/username";
+import { EmailAddress } from "@components/users/domain/emailAddress";
 
 interface IUserProps {
   username: Username;
-  emailAddress: string; // Value Object
+  emailAddress: EmailAddress;
   displayName: string; // Value Object
   avatar: string; // Value Object
   createdAt: Date;
@@ -15,6 +16,10 @@ interface IUserProps {
 class User extends Entity<IUserProps> {
   get username(): Username {
     return this.props.username;
+  }
+
+  get emailAddress(): EmailAddress {
+    return this.props.emailAddress;
   }
 
   /* eslint-disable-next-line no-useless-constructor */

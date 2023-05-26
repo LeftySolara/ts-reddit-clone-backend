@@ -138,4 +138,4 @@ class Guard {
   }
 }
 
-export { Guard };
+export { Guard, IGuardArgument, IGuardResult };

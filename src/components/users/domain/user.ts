@@ -5,12 +5,13 @@ import { Result } from "@utils/result";
 import { Username } from "@components/users/domain/username";
 import { EmailAddress } from "@components/users/domain/emailAddress";
 import { DisplayName } from "@components/users/domain/displayName";
+import { Avatar } from "@components/users/domain/avatar";
 
 interface IUserProps {
   username: Username;
   emailAddress: EmailAddress;
   displayName: DisplayName;
-  avatar: string; // Value Object
+  avatar: Avatar;
   createdAt: Date;
 }
 
@@ -25,6 +26,10 @@ class User extends Entity<IUserProps> {
 
   get displayName(): DisplayName {
     return this.props.displayName;
+  }
+
+  get avatar(): Avatar {
+    return this.props.avatar;
   }
 
   /* eslint-disable-next-line no-useless-constructor */

@@ -5,8 +5,8 @@ import { UserMap } from "@components/users/users.map";
 
 interface IUserRepo {
   exists(userId: string): Promise<boolean>;
-  getUsers(): Promise<UserCollection>;
-  getUserById(userId: string): Promise<any>;
+  getAllUsers(): Promise<UserCollection>;
+  getUserById(uuid: string): Promise<User | null>;
   save(user: User): Promise<User>;
 }
 
@@ -24,6 +24,7 @@ class UserRepo implements IUserRepo {
     let userEntity: User;
     fetchedUsers.forEach((user) => {
       userEntity = UserMap.toDomain({
+        uuid: user.uuid,
         username: user.username,
         emailAddress: user.emailAddress,
         hashedPassword: user.hashedPassword,
@@ -37,6 +38,48 @@ class UserRepo implements IUserRepo {
     });
 
     return users;
+  }
+
+  async getUserById(uuid: string): Promise<User | null> {
+    const fetchedUser = await database.user.findUnique({ where: { uuid } });
+
+    if (!fetchedUser) {
+      return null;
+    }
+
+    const user: User = UserMap.toDomain({
+      uuid: fetchedUser.uuid,
+      username: fetchedUser.username,
+      emailAddress: fetchedUser.emailAddress,
+      displayName: fetchedUser.displayName,
+      hashedPassword: fetchedUser.hashedPassword,
+      avatar: fetchedUser.avatar,
+      createdAt: fetchedUser.createdAt,
+      karma: fetchedUser.karma,
+    });
+
+    return user;
+  }
+
+  async save(user: User): Promise<User> {
+    const rawUser = UserMap.toPersistence(user);
+
+    const createdUser = await database.user.create({
+      data: rawUser,
+    });
+
+    const userEntity = UserMap.toDomain({
+      uuid: createdUser.uuid,
+      username: createdUser.username,
+      emailAddress: createdUser.emailAddress,
+      displayName: createdUser.displayName,
+      hashedPassword: createdUser.hashedPassword,
+      avatar: createdUser.avatar,
+      createdAt: createdUser.createdAt,
+      karma: createdUser.karma,
+    });
+
+    return userEntity;
   }
 }
 

@@ -5,6 +5,18 @@ import { EmailAddress } from "@components/users/domain/emailAddress";
 import { HashedPassword } from "@components/users/domain/hashedPassword";
 import { DisplayName } from "@components/users/domain/displayName";
 import { Avatar } from "@components/users/domain/avatar";
+import { UniqueEntityId } from "@domain/uniqueEntityId";
+
+interface RawUserProps {
+  uuid: string;
+  username: string;
+  emailAddress: string;
+  hashedPassword: string;
+  displayName: string;
+  avatar: string;
+  createdAt: Date;
+  karma: number;
+}
 
 class UserMap {
   public static toDTO(user: User): UserDTO {
@@ -12,9 +24,11 @@ class UserMap {
       uuid: user.uuid.props.value,
       username: user.username.value,
       emailAddress: user.emailAddress.value,
+      hashedPassword: user.hashedPassword.value,
       displayName: user.displayName.value,
       avatar: user.avatar.value,
       createdAt: user.createdAt,
+      karma: user.karma,
     };
   }
 
@@ -32,7 +46,8 @@ class UserMap {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  public static toDomain(raw: any): User {
+  public static toDomain(raw: RawUserProps): User {
+    const uuid = new UniqueEntityId({ value: raw.uuid });
     const username = Username.create(raw.username);
     const emailAddress = EmailAddress.create(raw.emailAddress);
     const hashedPassword = HashedPassword.create(raw.hashedPassword);
@@ -40,15 +55,18 @@ class UserMap {
     const avatar = Avatar.create(raw.avatar);
     const { createdAt, karma } = raw;
 
-    const createUserResult = User.createUser({
-      username,
-      emailAddress,
-      hashedPassword,
-      displayName,
-      avatar,
-      createdAt,
-      karma,
-    });
+    const createUserResult = User.createUser(
+      {
+        username,
+        emailAddress,
+        hashedPassword,
+        displayName,
+        avatar,
+        createdAt,
+        karma,
+      },
+      uuid,
+    );
 
     if (createUserResult.isFailure) {
       throw new Error(createUserResult.error?.toString());

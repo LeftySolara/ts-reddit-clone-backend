@@ -23,17 +23,7 @@ class UserRepo implements IUserRepo {
 
     let userEntity: User;
     fetchedUsers.forEach((user) => {
-      userEntity = UserMap.toDomain({
-        uuid: user.uuid,
-        username: user.username,
-        emailAddress: user.emailAddress,
-        hashedPassword: user.hashedPassword,
-        displayName: user.displayName,
-        avatar: user.avatar,
-        createdAt: user.createdAt,
-        karma: user.karma,
-      });
-
+      userEntity = UserMap.toDomain(user);
       users.push(userEntity);
     });
 
@@ -47,39 +37,15 @@ class UserRepo implements IUserRepo {
       return null;
     }
 
-    const user: User = UserMap.toDomain({
-      uuid: fetchedUser.uuid,
-      username: fetchedUser.username,
-      emailAddress: fetchedUser.emailAddress,
-      displayName: fetchedUser.displayName,
-      hashedPassword: fetchedUser.hashedPassword,
-      avatar: fetchedUser.avatar,
-      createdAt: fetchedUser.createdAt,
-      karma: fetchedUser.karma,
-    });
-
-    return user;
+    return UserMap.toDomain(fetchedUser);
   }
 
   async save(user: User): Promise<User> {
-    const rawUser = UserMap.toPersistence(user);
-
     const createdUser = await database.user.create({
-      data: rawUser,
+      data: UserMap.toPersistence(user),
     });
 
-    const userEntity = UserMap.toDomain({
-      uuid: createdUser.uuid,
-      username: createdUser.username,
-      emailAddress: createdUser.emailAddress,
-      displayName: createdUser.displayName,
-      hashedPassword: createdUser.hashedPassword,
-      avatar: createdUser.avatar,
-      createdAt: createdUser.createdAt,
-      karma: createdUser.karma,
-    });
-
-    return userEntity;
+    return UserMap.toDomain(createdUser);
   }
 }
 

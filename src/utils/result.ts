@@ -1,3 +1,6 @@
+/* eslint-disable max-classes-per-file,class-methods-use-this,no-use-before-define */
+import logger from "@utils/logger";
+
 class Result<T> {
   public isSuccess: boolean;
 
@@ -30,16 +33,25 @@ class Result<T> {
 
   public getValue(): T {
     if (!this.isSuccess || !this.value) {
-      return this.error as T;
+      logger.error(this.error);
+      throw new Error(
+        "Can't get the value of an error result. Use 'errorValue' instead.",
+      );
     }
+
     return this.value;
+  }
+
+  public errorValue(): T {
+    return this.error as T;
   }
 
   public static ok<U>(value?: U): Result<U> {
     return new Result<U>(true, null, value);
   }
 
-  public static fail<U>(error: string): Result<U> {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  public static fail<U>(error: any): Result<U> {
     return new Result<U>(false, error);
   }
 
@@ -63,4 +75,46 @@ class Result<T> {
   }
 }
 
-export { Result };
+type Either<L, A> = Left<L, A> | Right<L, A>;
+
+class Left<L, A> {
+  readonly value: L;
+
+  constructor(value: L) {
+    this.value = value;
+  }
+
+  isLeft(): this is Left<L, A> {
+    return true;
+  }
+
+  isRight(): this is Right<L, A> {
+    return false;
+  }
+}
+
+class Right<L, A> {
+  readonly value: A;
+
+  constructor(value: A) {
+    this.value = value;
+  }
+
+  isLeft(): this is Left<L, A> {
+    return false;
+  }
+
+  isRight(): this is Right<L, A> {
+    return true;
+  }
+}
+
+const left = <L, A>(l: L): Either<L, A> => {
+  return new Left(l);
+};
+
+const right = <L, A>(a: A): Either<L, A> => {
+  return new Right<L, A>(a);
+};
+
+export { Result, Either, Left, Right, left, right };

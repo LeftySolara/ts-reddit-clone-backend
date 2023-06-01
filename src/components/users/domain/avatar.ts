@@ -1,5 +1,6 @@
 import { ValueObject } from "@domain/valueObject";
 import { Guard, IGuardResult } from "@utils/guard";
+import { Result } from "@utils/result";
 
 interface AvatarProps {
   value: string;
@@ -18,21 +19,21 @@ class Avatar extends ValueObject<AvatarProps> {
     super(props);
   }
 
-  public static create(avatar: string): Avatar {
+  public static create(avatar: string): Result<Avatar> {
     const nullOrUndefinedResult: IGuardResult = Guard.againstNullOrUndefined(
       avatar,
       "avatar",
     );
     if (!nullOrUndefinedResult.succeeded) {
-      throw new Error(nullOrUndefinedResult.message);
+      return Result.fail<Avatar>(nullOrUndefinedResult.message);
     }
 
     const re = new RegExp(Avatar.urlFormat);
     if (re.exec(avatar) === null) {
-      throw new Error("Invalid URL.");
+      return Result.fail<Avatar>("Invalid URL format.");
     }
 
-    return new Avatar({ value: avatar });
+    return Result.ok<Avatar>(new Avatar({ value: avatar }));
   }
 }
 

@@ -1,5 +1,6 @@
 import { ValueObject } from "@domain/valueObject";
 import { Guard, IGuardResult } from "@utils/guard";
+import { Result } from "@utils/result";
 
 interface HashedPasswordProps {
   value: string;
@@ -18,15 +19,11 @@ class HashedPassword extends ValueObject<HashedPasswordProps> {
     super(props);
   }
 
-  public static create(hashedPassword: string): HashedPassword {
+  public static create(hashedPassword: string): Result<HashedPassword> {
     const nullOrUndefinedResult: IGuardResult = Guard.againstNullOrUndefined(
       hashedPassword,
       "hashedPassword",
     );
-
-    if (!nullOrUndefinedResult.succeeded) {
-      throw new Error(nullOrUndefinedResult.message);
-    }
 
     const hashedPasswordLengthResult: IGuardResult = Guard.inRange(
       hashedPassword.length,
@@ -35,11 +32,18 @@ class HashedPassword extends ValueObject<HashedPasswordProps> {
       "hashedPassword.length",
     );
 
-    if (!hashedPasswordLengthResult.succeeded) {
-      throw new Error(hashedPasswordLengthResult.message);
+    const result = Guard.combine([
+      nullOrUndefinedResult,
+      hashedPasswordLengthResult,
+    ]);
+
+    if (!result.succeeded) {
+      return Result.fail<HashedPassword>(result.message);
     }
 
-    return new HashedPassword({ value: hashedPassword });
+    return Result.ok<HashedPassword>(
+      new HashedPassword({ value: hashedPassword }),
+    );
   }
 }
 

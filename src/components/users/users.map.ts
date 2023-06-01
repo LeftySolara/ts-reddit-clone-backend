@@ -6,6 +6,7 @@ import { HashedPassword } from "@components/users/domain/hashedPassword";
 import { DisplayName } from "@components/users/domain/displayName";
 import { Avatar } from "@components/users/domain/avatar";
 import { UniqueEntityId } from "@domain/uniqueEntityId";
+import { Result } from "@utils/result";
 
 interface RawUserProps {
   uuid: string;
@@ -55,13 +56,25 @@ class UserMap {
     const avatar = Avatar.create(raw.avatar);
     const { createdAt, karma } = raw;
 
+    const valueObjectResult = Result.combine([
+      username,
+      emailAddress,
+      hashedPassword,
+      displayName,
+      avatar,
+    ]);
+
+    if (valueObjectResult.isFailure) {
+      throw new Error(valueObjectResult.errorValue.toString());
+    }
+
     const createUserResult = User.createUser(
       {
-        username,
-        emailAddress,
-        hashedPassword,
-        displayName,
-        avatar,
+        username: username.getValue(),
+        emailAddress: emailAddress.getValue(),
+        hashedPassword: hashedPassword.getValue(),
+        displayName: displayName.getValue(),
+        avatar: avatar.getValue(),
         createdAt,
         karma,
       },

@@ -1,5 +1,6 @@
 import { ValueObject } from "@domain/valueObject";
 import { Guard, IGuardResult } from "@utils/guard";
+import { Result } from "@utils/result";
 
 interface UsernameProps {
   value: string;
@@ -19,14 +20,11 @@ class Username extends ValueObject<UsernameProps> {
     super(props);
   }
 
-  public static create(username: string): Username {
+  public static create(username: string): Result<Username> {
     const nullOrUndefinedResult: IGuardResult = Guard.againstNullOrUndefined(
       username,
       "username",
     );
-    if (!nullOrUndefinedResult.succeeded) {
-      throw new Error(nullOrUndefinedResult.message);
-    }
 
     const usernameLengthResult: IGuardResult = Guard.inRange(
       username.length,
@@ -34,11 +32,13 @@ class Username extends ValueObject<UsernameProps> {
       Username.maxLength,
       "username.length",
     );
-    if (!usernameLengthResult.succeeded) {
-      throw new Error(usernameLengthResult.message);
+
+    const result = Guard.combine([nullOrUndefinedResult, usernameLengthResult]);
+    if (!result.succeeded) {
+      return Result.fail<Username>(result.message);
     }
 
-    return new Username({ value: username });
+    return Result.ok<Username>(new Username({ value: username }));
   }
 }
 

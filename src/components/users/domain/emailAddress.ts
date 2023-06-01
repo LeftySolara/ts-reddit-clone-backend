@@ -1,5 +1,6 @@
 import { ValueObject } from "@domain/valueObject";
 import { Guard, IGuardResult } from "@utils/guard";
+import { Result } from "@utils/result";
 
 interface EmailAddressProps {
   value: string;
@@ -18,21 +19,21 @@ class EmailAddress extends ValueObject<EmailAddressProps> {
     super(props);
   }
 
-  public static create(emailAddress: string): EmailAddress {
+  public static create(emailAddress: string): Result<EmailAddress> {
     const nullOrUndefinedResult: IGuardResult = Guard.againstNullOrUndefined(
       emailAddress,
       "emailAddress",
     );
     if (!nullOrUndefinedResult.succeeded) {
-      throw new Error(nullOrUndefinedResult.message);
+      return Result.fail<EmailAddress>(nullOrUndefinedResult.message);
     }
 
     const re = new RegExp(EmailAddress.emailFormat);
     if (re.exec(emailAddress) === null) {
-      throw new Error("Invalid email format.");
+      return Result.fail<EmailAddress>("Invalid email address.");
     }
 
-    return new EmailAddress({ value: emailAddress });
+    return Result.ok<EmailAddress>(new EmailAddress({ value: emailAddress }));
   }
 }
 

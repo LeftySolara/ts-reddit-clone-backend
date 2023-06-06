@@ -13,6 +13,10 @@ export default defineConfig({
         find: "@utils",
         replacement: path.resolve(__dirname, "src/utils"),
       },
+      {
+        find: "@domain",
+        replacement: path.resolve(__dirname, "src/domain"),
+      },
     ],
   },
 });

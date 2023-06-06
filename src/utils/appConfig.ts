@@ -9,6 +9,10 @@ interface IAppConfig {
     logLevel: string | undefined;
     logLocation: string | undefined;
   };
+  uuid: {
+    namespace: string | undefined;
+    name: string | undefined;
+  };
 }
 
 /* Load environment variables. If we're not running in a production environment, then
@@ -31,6 +35,10 @@ const appConfig: IAppConfig = {
   logger: {
     logLevel: process.env.LOG_LEVEL,
     logLocation: process.env.LOG_LOCATION,
+  },
+  uuid: {
+    namespace: process.env.UUID_NAMESPACE,
+    name: process.env.UUID_NAME,
   },
 };
 

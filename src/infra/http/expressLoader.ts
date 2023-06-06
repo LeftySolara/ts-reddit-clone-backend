@@ -3,7 +3,7 @@ import bodyParser, { urlencoded } from "body-parser";
 import { pinoHttp } from "pino-http";
 import { appConfig } from "@utils/appConfig";
 import logger from "@utils/logger";
-import userRoutes from "@components/users/users.routes";
+import { usersRouter } from "@components/users/users.routes";
 import { ErrorHandler } from "@utils/errors";
 
 const loadExpress = async ({ app }: { app: Application }) => {
@@ -27,7 +27,7 @@ const loadExpress = async ({ app }: { app: Application }) => {
     next();
   });
 
-  app.use("/users", userRoutes);
+  app.use("/users", usersRouter);
 
   /* eslint-disable no-unused-vars,@typescript-eslint/no-unused-vars */
   app.use(

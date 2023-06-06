@@ -20,7 +20,7 @@ interface IUserProps {
 
 class User extends Entity<IUserProps> {
   get uuid(): UniqueEntityId {
-    return this.uuid;
+    return this.id;
   }
 
   get username(): Username {
@@ -44,11 +44,11 @@ class User extends Entity<IUserProps> {
   }
 
   get createdAt(): Date {
-    return this.createdAt;
+    return this.props.createdAt;
   }
 
   get karma(): number {
-    return this.karma;
+    return this.props.karma;
   }
 
   /* eslint-disable-next-line no-useless-constructor */

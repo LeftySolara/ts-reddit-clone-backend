@@ -1,3 +1,9 @@
+interface CreateUserDTO {
+  username: string;
+  emailAddress: string;
+  password: string;
+}
+
 interface UserDTO {
   uuid: string;
   username: string;
@@ -9,4 +15,4 @@ interface UserDTO {
   karma: number;
 }
 
-export { UserDTO };
+export { CreateUserDTO, UserDTO };

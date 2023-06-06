@@ -4,7 +4,8 @@ import { UserMap } from "@components/users/users.map";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface IUserRepo {
-  exists(userId: string): Promise<boolean>;
+  exists(emailAddress: string): Promise<boolean>;
+  usernameExists(username: string): Promise<boolean>;
   getAllUsers(): Promise<UserCollection>;
   getUserById(uuid: string): Promise<User | null>;
   save(user: User): Promise<User>;
@@ -12,8 +13,13 @@ interface IUserRepo {
 
 class UserRepo implements IUserRepo {
   /* eslint-disable class-methods-use-this */
-  async exists(userId: string): Promise<boolean> {
-    const user = await database.user.findUnique({ where: { uuid: userId } });
+  async exists(emailAddress: string): Promise<boolean> {
+    const user = await database.user.findUnique({ where: { emailAddress } });
+    return !!user;
+  }
+
+  async usernameExists(username: string): Promise<boolean> {
+    const user = await database.user.findUnique({ where: { username } });
     return !!user;
   }
 
@@ -49,4 +55,6 @@ class UserRepo implements IUserRepo {
   }
 }
 
-export default new UserRepo();
+const userRepo = new UserRepo();
+
+export { userRepo, IUserRepo };

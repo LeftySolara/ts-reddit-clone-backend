@@ -13,7 +13,7 @@ class UniqueEntityId extends ValueObject<UniqueEntityIdProps> {
   /* eslint-disable-next-line no-useless-constructor */
   constructor(props?: UniqueEntityIdProps) {
     /* If no UUID is given, generate a new one. */
-    if (!props) {
+    if (!props || props.value.length === 0) {
       super({
         value: uuidv5(
           appConfig.uuid.name as string,

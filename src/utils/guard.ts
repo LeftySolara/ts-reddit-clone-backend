@@ -105,7 +105,7 @@ class Guard {
     if (!isInRange) {
       return {
         succeeded: false,
-        message: `${argumentName} is not withing range ${min} to ${max}.`,
+        message: `${argumentName} is not within range ${min} to ${max}.`,
       };
     }
 

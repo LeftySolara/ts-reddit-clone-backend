@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: reddit-clone-db
+    hostname: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: mariadb
+      MYSQL_DATABASE: reddit_clone
+      MYSQL_USER: mariadb
+      MYSQL_PASSWORD: mariadb
+    volumes:
+      - back-end_mariadb-data:/var/lib/mysql/reddit_clone
+      - back-end_mariadb-data_config:/var/lib/mysql/reddit_clone_config
+    restart: unless-stopped
+
+  reddit-clone:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reddit-clone
+    depends_on:
+      mariadb:
+        condition: service_started
+        restart: true
+    ports:
+      - "5000:5000"
+      - "9229:9229"
+    restart: always
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+volumes:
+  back-end_mariadb-data:
+  back-end_mariadb-data_config:

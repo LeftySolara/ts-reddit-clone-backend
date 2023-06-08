@@ -13,8 +13,10 @@
   "main": "src/infra/http/server.ts",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "dev": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register ./src/infra/http/server.ts",
+    "dev": "NODE_ENV=development ts-node-dev --inspect=0.0.0.0:9229 -r tsconfig-paths/register ./src/infra/http/server.ts",
+    "dev:migrate": "prisma migrate dev && npm run dev",
     "prod": "NODE_ENV=production ts-node -r tsconfig-paths/register ./src/infra/http/server.ts",
+    "prod:migrate": "prisma migrate deploy && npm run prod",
     "start": "NODE_ENV=production node dist/infra/http/server.js",
     "test": "NODE_ENV=test vitest",
     "test:ci": "NODE_ENV=testci vitest"
